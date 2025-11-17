@@ -171,14 +171,14 @@ export const AuthProvider = ({ children }) => {
             if (response.ok) {
                 const data = await safeJsonParse(response);
 
-                if (data.user.user_type !== 'Cán bộ quản lý') {
-                    const errorMessage = 'Chỉ được đăng nhập bằng tài khoản của Cán bộ quản lý.';
-                    if (isMountedRef.current) {
-                        setError(errorMessage);
-                        setLoading(false);
-                    }
-                    return { success: false, error: errorMessage };
-                }
+                // if (data.user.user_type !== 'Cán bộ quản lý') {
+                //     const errorMessage = 'Chỉ được đăng nhập bằng tài khoản của Cán bộ quản lý.';
+                //     if (isMountedRef.current) {
+                //         setError(errorMessage);
+                //         setLoading(false);
+                //     }
+                //     return { success: false, error: errorMessage };
+                // }
 
                 if (isMountedRef.current) {
                     TokenManager.set(data.access_token, data.expires_in || 3600);

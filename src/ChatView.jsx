@@ -17,6 +17,13 @@ const ChatView = () => {
     const [fileTypes, setFileTypes] = useState(DEFAULT_FILE_TYPES);
     const [error, setError] = useState('');
 
+    // Hàm reset chat
+    const handleResetChat = () => {
+        setMessages([]);
+        setInputMessage('');
+        setError('');
+    };
+
     // Token validation helper
     const validateToken = useCallback(async () => {
         if (!isReady || !token) {
@@ -29,7 +36,7 @@ const ChatView = () => {
             try {
                 await refreshToken();
                 return true;
-            } catch (error) {
+            } catch {
                 setError('Không thể làm mới token, vui lòng đăng nhập lại');
                 return false;
             }
@@ -135,8 +142,8 @@ const ChatView = () => {
     };
 
     return (
-        <div className="flex-1 flex flex-col h-full">
-            <div className="border-b border-gray-200 p-4">
+        <div className="flex flex-col h-full">
+            <div className="border-b border-gray-200 p-4 flex-shrink-0">
                 <div className="flex items-center gap-4">
                     <h3 className="text-lg font-semibold text-gray-900">Trò chuyện với AI</h3>
                     <select
@@ -148,6 +155,14 @@ const ChatView = () => {
                             <option key={type} value={type}>{type}</option>
                         ))}
                     </select>
+                    <button
+                        onClick={handleResetChat}
+                        className="ml-auto px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg flex items-center gap-2 transition-colors"
+                        title="Làm mới cuộc trò chuyện"
+                    >
+                        <RefreshCw className="w-4 h-4" />
+                        <span className="text-sm font-medium">Làm mới</span>
+                    </button>
                 </div>
                 {error && (
                     <div className="mt-2 text-red-600 text-sm">{error}</div>

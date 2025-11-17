@@ -1,40 +1,39 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { FileText, MessageSquare, Folder, Shield, LogOut } from 'lucide-react';
 import { useAuth } from './AuthContext';
 
 const Sidebar = ({ activeView, setActiveView }) => {
-    const { logout } = useAuth();
+    const { logout, user } = useAuth();
 
-    const menuItems = [
-        {
-            id: 'documents',
-            label: 'Tài liệu',
-            icon: FileText,
-            color: 'text-blue-600',
-            bgColor: 'bg-blue-50',
-            hoverColor: 'hover:bg-blue-100',
-            dotColor: 'bg-blue-600'
-        },
-        {
-            id: 'folders',
-            label: 'Thư mục',
-            icon: Folder,
-            color: 'text-green-600',
-            bgColor: 'bg-green-50',
-            hoverColor: 'hover:bg-green-100',
-            dotColor: 'bg-green-600'
-        },
-        // {
-        //     id: 'folder-roles',
-        //     label: 'Phân quyền',
-        //     icon: Shield,
-        //     color: 'text-purple-600',
-        //     bgColor: 'bg-purple-50',
-        //     hoverColor: 'hover:bg-purple-100',
-        //     dotColor: 'bg-purple-600'
-        // }
-        // ,
-        {
+    const menuItems = useMemo(() => {
+        const items = [];
+
+        // Chỉ hiển thị Tài liệu và Thư mục nếu user_type là "Cán bộ quản lý"
+        if (user?.user_type === 'Cán bộ quản lý') {
+            items.push(
+                {
+                    id: 'documents',
+                    label: 'Tài liệu',
+                    icon: FileText,
+                    color: 'text-blue-600',
+                    bgColor: 'bg-blue-50',
+                    hoverColor: 'hover:bg-blue-100',
+                    dotColor: 'bg-blue-600'
+                },
+                {
+                    id: 'folders',
+                    label: 'Thư mục',
+                    icon: Folder,
+                    color: 'text-green-600',
+                    bgColor: 'bg-green-50',
+                    hoverColor: 'hover:bg-green-100',
+                    dotColor: 'bg-green-600'
+                }
+            );
+        }
+
+        // Luôn hiển thị Trò chuyện cho tất cả user
+        items.push({
             id: 'chat',
             label: 'Trò chuyện',
             icon: MessageSquare,
@@ -42,8 +41,10 @@ const Sidebar = ({ activeView, setActiveView }) => {
             bgColor: 'bg-indigo-50',
             hoverColor: 'hover:bg-indigo-100',
             dotColor: 'bg-indigo-600'
-        }
-    ];
+        });
+
+        return items;
+    }, [user]);
 
     return (
         <div className="w-64 bg-white shadow-lg border-r border-gray-200 flex flex-col">

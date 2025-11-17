@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { useAuth } from './AuthContext';
 import Header from './Header';
 import Sidebar from './Sidebar';
@@ -12,6 +12,22 @@ import { RefreshCw } from 'lucide-react';
 const App = () => {
   const [activeView, setActiveView] = useState('documents');
   const { isAuthenticated, loading, isReady, user } = useAuth();
+
+  // Tự động chuyển về view phù hợp khi user thay đổi
+  useEffect(() => {
+    if (user) {
+      const isManager = user.user_type === 'Cán bộ quản lý';
+
+      // Nếu không phải quản lý và đang ở tab documents/folders, chuyển về chat
+      if (!isManager && (activeView === 'documents' || activeView === 'folders' || activeView === 'folder-roles')) {
+        setActiveView('chat');
+      }
+      // Nếu là quản lý và đang ở tab không hợp lệ, chuyển về documents
+      else if (isManager && activeView !== 'documents' && activeView !== 'folders' && activeView !== 'chat') {
+        setActiveView('documents');
+      }
+    }
+  }, [user, activeView]);
 
   const LoadingScreen = useMemo(() => (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100">
@@ -31,20 +47,12 @@ const App = () => {
     </div>
   ), []);
 
-  const MainContent = useMemo(() => {
-    switch (activeView) {
-      case 'documents':
-        return <DocumentsView key="documents" />;
-      case 'folders':
-        return <FoldersView key="folders" />;
-      case 'folder-roles':
-        return <FolderRolesView key="folder-roles" />;
-      case 'chat':
-        return <ChatView key="chat" />;
-      default:
-        return <DocumentsView key="documents" />;
-    }
-  }, [activeView]);
+  // State để quản lý việc reset các component
+  const [resetKeys] = useState({
+    documents: 0,
+    folders: 0,
+    chat: 0
+  });
 
   console.log('App render state:', {
     loading,
@@ -70,7 +78,18 @@ const App = () => {
         <Header />
         <div className="flex flex-1 overflow-hidden">
           <Sidebar activeView={activeView} setActiveView={setActiveView} />
-          <main className="flex-1 overflow-y-auto">{MainContent}</main>
+          <main className="flex-1 overflow-hidden relative">
+            {/* Render tất cả views nhưng chỉ hiển thị view active */}
+            <div style={{ display: activeView === 'documents' ? 'block' : 'none', height: '100%', overflowY: 'auto' }}>
+              <DocumentsView key={`documents-${resetKeys.documents}`} />
+            </div>
+            <div style={{ display: activeView === 'folders' ? 'block' : 'none', height: '100%', overflowY: 'auto' }}>
+              <FoldersView key={`folders-${resetKeys.folders}`} />
+            </div>
+            <div style={{ display: activeView === 'chat' ? 'block' : 'none', height: '100%' }}>
+              <ChatView key={`chat-${resetKeys.chat}`} />
+            </div>
+          </main>
         </div>
       </div>
     );
