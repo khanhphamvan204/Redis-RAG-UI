@@ -20,6 +20,7 @@ export const API_CONFIG = {
         VECTOR_DELETE: '/documents/vector',
         VECTOR_SEARCH: '/documents/vector/search',
         SEARCH_WITH_LLM: '/documents/vector/search-with-llm',
+        SEARCH_WITH_LLM_CONTEXT: '/documents/vector/search-with-llm-context',
         SEARCH_USER: '/api/manager/search-user',
         SEARCH_DEPARTMENT: '/api/manager/search-department',
         // Thêm các endpoint cho quản lý thư mục
