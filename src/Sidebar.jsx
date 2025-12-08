@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { FileText, MessageSquare, Folder, Shield, LogOut } from 'lucide-react';
+import { FileText, MessageSquare, Folder, Shield, LogOut, BarChart3 } from 'lucide-react';
 import { useAuth } from './AuthContext';
 
 const Sidebar = ({ activeView, setActiveView }) => {
@@ -28,6 +28,15 @@ const Sidebar = ({ activeView, setActiveView }) => {
                     bgColor: 'bg-green-50',
                     hoverColor: 'hover:bg-green-100',
                     dotColor: 'bg-green-600'
+                },
+                {
+                    id: 'analytics',
+                    label: 'Phân tích',
+                    icon: BarChart3,
+                    color: 'text-purple-600',
+                    bgColor: 'bg-purple-50',
+                    hoverColor: 'hover:bg-purple-100',
+                    dotColor: 'bg-purple-600'
                 }
             );
         }

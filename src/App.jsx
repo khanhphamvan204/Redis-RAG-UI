@@ -6,6 +6,7 @@ import DocumentsView from './DocumentsView';
 import FoldersView from './FoldersView';
 // import FolderRolesView from './FolderRolesView';
 import ChatView from './ChatView';
+import AnalyticsView from './AnalyticsView';
 import LoginForm from './LoginForm';
 import { RefreshCw } from 'lucide-react';
 
@@ -23,7 +24,7 @@ const App = () => {
         setActiveView('chat');
       }
       // Nếu là quản lý và đang ở tab không hợp lệ, chuyển về documents
-      else if (isManager && activeView !== 'documents' && activeView !== 'folders' && activeView !== 'chat') {
+      else if (isManager && activeView !== 'documents' && activeView !== 'folders' && activeView !== 'chat' && activeView !== 'analytics') {
         setActiveView('documents');
       }
     }
@@ -51,7 +52,8 @@ const App = () => {
   const [resetKeys] = useState({
     documents: 0,
     folders: 0,
-    chat: 0
+    chat: 0,
+    analytics: 0
   });
 
   console.log('App render state:', {
@@ -88,6 +90,9 @@ const App = () => {
             </div>
             <div style={{ display: activeView === 'chat' ? 'block' : 'none', height: '100%' }}>
               <ChatView key={`chat-${resetKeys.chat}`} />
+            </div>
+            <div style={{ display: activeView === 'analytics' ? 'block' : 'none', height: '100%' }}>
+              <AnalyticsView key={`analytics-${resetKeys.analytics}`} />
             </div>
           </main>
         </div>
